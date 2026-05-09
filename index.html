@@ -54,15 +54,20 @@ body {
 .logo-container {
     display: flex;
     align-items: center;
-    gap: 10px; 
-}
-.logo (width:50px;}
-.nav-list {
-    display: flex;
-    list-style: none;
-    gap: 2rem;
+    gap: 10px;
 }
 
+.logo-img {
+    width: 50px;
+    height: auto;
+}
+
+.logo-text {
+    text-decoration: none;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #4F46E5;
+}
 .nav-link {
     text-decoration: none;
     color: #666;
@@ -545,11 +550,13 @@ body {
 <body>
     <header class="header">
         <div class="container">
-            <div class="logo-container">
-                <img src = "36.png" alt="StudyFlow" class="logo"> 
-                <h2>StudyFlow</h2>
-            </div>
-          
+           <div class="logo-container">
+    <img src="36.png" alt="StudyFlow Logo" class="logo-img">
+
+    <a href="index.html" class="logo-text">
+        StudyFlow
+    </a>
+        </div>
             <nav class="nav">
                 <ul class="nav-list">
                     <li><a href="index.html" class="nav-link active">Home</a></li>
