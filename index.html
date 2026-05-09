@@ -50,7 +50,12 @@ body {
     align-items: center;
     padding: 1rem 20px;
 }
-
+        
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+    
 .logo {
     font-size: 1.8rem;
     font-weight: 700;
@@ -538,12 +543,17 @@ body {
     margin-bottom: 2rem;
 }
     </style>
+
+<link rel="icon" type="png" href="36.png">
 </head>
 <body>
     <header class="header">
         <div class="container">
-            <div class="logo">StudyFlow</div>
-            <img scr = "36.png" class="logo">
+            <div class="logo-container">
+                <img scr = "36.png" alt="Logo StudyFlow" class="logo"> 
+                <h2>StudyFlow</h2>
+            </div>
+          
             <nav class="nav">
                 <ul class="nav-list">
                     <li><a href="index.html" class="nav-link active">Home</a></li>
