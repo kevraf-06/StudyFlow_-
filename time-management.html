@@ -4,9 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Management - StudyFlow</title>
-   <style>/* ===========================
+   <style>
+    /* ===========================
    GLOBAL STYLES & RESET
    =========================== */
+
+ :root {
+    --primary: #4F46E5;
+    --primary-dark: #3730a3;
+    --bg-light: #f8f9fa;
+    --transition: all 0.3s ease;
+}
 
 * {
     margin: 0;
@@ -198,7 +206,8 @@ body {
 
 .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    /* auto-fit akan otomatis menyesuaikan jumlah kolom sesuai lebar layar */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
     gap: 2rem;
     margin-bottom: 2rem;
 }
@@ -208,13 +217,15 @@ body {
     border-radius: 12px;
     padding: 2rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
+    transition: var(--transition); /* Menggunakan variable */
     text-align: center;
+    border-bottom: 3px solid transparent; /* Garis bawah tersembunyi */
 }
 
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.12);
+    transform: translateY(-10px);
+    box-shadow: 0 12px 24px rgba(79, 70, 229, 0.15);
+    border-bottom: 3px solid var(--primary); /* Muncul saat hover */
 }
 
 .card-icon {
