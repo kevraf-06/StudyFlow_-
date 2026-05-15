@@ -637,7 +637,21 @@ body {
             </div>
         </section>
     </main>
-
+    
+<!-- Modal Structure -->
+<div id="startModal" class="modal" style="display:none; position:fixed; z-index:2000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.7); align-items:center; justify-content:center;">
+    <div style="background:white; padding:30px; border-radius:15px; max-width:400px; text-align:center; position:relative;">
+        <span onclick="closeModal()" style="position:absolute; right:15px; top:10px; cursor:pointer; font-size:20px;">&times;</span>
+        <h3 style="margin-bottom:15px; color:#4F46E5;">Apa fokusmu hari ini?</h3>
+        <p style="font-size:0.9rem; margin-bottom:20px;">Pilih satu agar kami bisa mengarahkanmu ke strategi yang tepat.</p>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+            <a href="anti-procrastination.html" style="text-decoration:none; background:#f0f4ff; padding:10px; border-radius:8px; color:#4F46E5; font-weight:600;">🚀 Ingin Berhenti Menunda</a>
+            <a href="priority-system.html" style="text-decoration:none; background:#f0f4ff; padding:10px; border-radius:8px; color:#4F46E5; font-weight:600;">🎯 Mengatur Skala Prioritas</a>
+            <a href="study-techniques.html" style="text-decoration:none; background:#f0f4ff; padding:10px; border-radius:8px; color:#4F46E5; font-weight:600;">🧠 Belajar Lebih Efektif</a>
+        </div>
+    </div>
+</div>
+    
     <footer class="footer">
         <div class="container">
             <p>&copy; 2026 StudyFlow. All rights reserved.</p>
