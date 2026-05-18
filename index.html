@@ -66,8 +66,6 @@ body {
     display: flex;
     align-items: center;
     gap: 5px;
-    justify-content: center;
-        width: 100%;
 }
 
 .logo-img {
@@ -84,19 +82,14 @@ body {
 .nav {
     display: flex;
     align-items: center;
-    width: 100%;
-    justify-content: center;
 }
 
 .nav-list {
     display: flex;
     list-style: none;
+    gap: 1.5rem;
     align-items: center;
-    flex-direction: row;      /* Menu TETAP berjejer ke samping, tidak vertikal */
-    flex-wrap: wrap;          /* MAGIC CODE: Jika gak muat, menu sisa otomatis turun ke baris baru dengan rapi */
-    justify-content: center;
-    gap: 0.8rem 1.2rem;       /* Jarak antar menu vertikal dan horizontal diatur pas agar tidak tabrakan */
-    width: 100%;
+
 }
 .nav-link {
     text-decoration: none;
@@ -104,8 +97,7 @@ body {
     font-weight: 500;
     transition: color 0.3s ease;
     position: relative;
-    font-size: 0.85rem;       
-    padding: 4px 0;
+    font-size: 0.95rem;       
 }
 
 .nav-link:hover,
@@ -121,7 +113,7 @@ body {
     height: 2px;
     background-color: #4F46E5;
     border-radius: 2px;
-    bottom: -2px;
+    bottom: -8px;
 }
 
 /* ===========================
@@ -401,8 +393,8 @@ body {
 @media (max-width: 768px) {
     .header .container {
         flex-direction: column;   
-        gap: 0.8rem;            
-        padding: 1rem 15px;
+        gap: 1rem;            
+        padding: 1rem 20px;
         text-align: center;
     }
 
