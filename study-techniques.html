@@ -5,6 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Study Techniques - StudyFlow</title>
     <style>
+
+ /* FLASHCARD QUIZ SYSTEM */
+.flashcard-container {
+    perspective: 1000px;
+    width: 100%;
+    max-width: 450px;
+    height: 250px;
+    margin: 2rem auto;
+    cursor: pointer;
+}
+
+.flashcard {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s ease;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    border-radius: 12px;
+}
+
+.flashcard.flipped {
+    transform: rotateY(180deg);
+}
+
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.card-front {
+    background: var(--primary);
+    color: white;
+}
+
+.card-back {
+    background: #1e293b;
+    color: white;
+    transform: rotateY(180deg);
+}
+
+.dark-theme .card-back {
+    background: #334155;
+}
     /* ===========================
    GLOBAL STYLES & RESET
    =========================== */
@@ -807,6 +860,40 @@ body {
                         <li>Create mind maps from memory, then verify accuracy</li>
                     </ul>
                 </div>
+                <div class="content-card">
+    <h2 class="card-title-main">Active Recall Flashcards</h2>
+    <p>Uji daya ingatmu! Masukkan daftar pertanyaan kunci di bawah ini, lalu klik kartu untuk melihat jawabannya.</p>
+
+    <div style="margin: 1.5rem 0; display: flex; flex-direction: column; gap: 10px;">
+        <input type="text" id="fc-question" placeholder="Masukkan Pertanyaan... (Contoh: Apa rumus Hukum Ohm?)" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+        <input type="text" id="fc-answer" placeholder="Masukkan Jawaban Kunci... (Contoh: V = I x R)" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+        <button id="add-fc-btn" style="background: var(--primary); color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">Simpan ke Kumpulan Kartu</button>
+    </div>
+
+    <div id="flashcard-deck" style="display:none;">
+        <div class="flashcard-container" id="fc-box">
+            <div class="flashcard" id="fc-hardware">
+                <div class="card-face card-front">
+                    <span style="font-size:0.85rem; text-transform:uppercase; opacity:0.8; margin-bottom:1rem;">Pertanyaan</span>
+                    <h3 id="display-question" style="font-size:1.4rem;">Pertanyaan disini?</h3>
+                </div>
+                <div class="card-face card-back">
+                    <span style="font-size:0.85rem; text-transform:uppercase; opacity:0.8; margin-bottom:1rem; color:#10b981;">Jawaban Benar</span>
+                    <h3 id="display-answer" style="font-size:1.4rem;">Jawaban disini.</h3>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 1rem;">
+            <button id="prev-fc" style="padding:8px 15px; border-radius:5px; cursor:pointer; border:1px solid #ccc; background:var(--card-bg);">⬅️ Sebelum</button>
+            <span id="fc-counter" style="margin: 0 15px; font-weight:600;">1 / 1</span>
+            <button id="next-fc" style="padding:8px 15px; border-radius:5px; cursor:pointer; border:1px solid #ccc; background:var(--card-bg);">Berikut ➡️</button>
+            <button id="delete-fc" style="margin-left: 10px; color:#ef4444; background:none; border:none; cursor:pointer;">Hapus Kartu Ini</button>
+        </div>
+    </div>
+    
+    <p id="no-fc-msg" style="text-align:center; color:#888; font-style:italic; margin-top:2rem;">Belum ada kartu hafalan. Tambahkan pertanyaan di atas untuk memulai kuis!</p>
+</div>
             </div>
 
             <!-- Technique 3 -->
@@ -891,5 +978,79 @@ body {
             <p>&copy; 2026 StudyFlow. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+    const fcQuestion = document.getElementById('fc-question');
+    const fcAnswer = document.getElementById('fc-answer');
+    const addFcBtn = document.getElementById('add-fc-btn');
+    const fcBox = document.getElementById('fc-box');
+    const fcHardware = document.getElementById('fc-hardware');
+
+    let flashcards = JSON.parse(localStorage.getItem('studyflow-flashcards')) || [];
+    let currentIndex = 0;
+
+    // Aksi Klik untuk Membalik Kartu
+    fcBox.addEventListener('click', () => {
+        fcHardware.classList.toggle('flipped');
+    });
+
+    function updateFlashcardView() {
+        if (flashcards.length > 0) {
+            document.getElementById('flashcard-deck').style.display = 'block';
+            document.getElementById('no-fc-msg').style.display = 'none';
+            
+            // Reset efek putaran ke depan saat ganti kartu
+            fcHardware.classList.remove('flipped');
+            
+            // Render text setelah animasi putaran aman
+            setTimeout(() => {
+                document.getElementById('display-question').textContent = flashcards[currentIndex].q;
+                document.getElementById('display-answer').textContent = flashcards[currentIndex].a;
+                document.getElementById('fc-counter').textContent = `${currentIndex + 1} / ${flashcards.length}`;
+            }, 150);
+        } else {
+            document.getElementById('flashcard-deck').style.display = 'none';
+            document.getElementById('no-fc-msg').style.display = 'block';
+        }
+    }
+
+    addFcBtn.addEventListener('click', () => {
+        if (fcQuestion.value.trim() !== '' && fcAnswer.value.trim() !== '') {
+            flashcards.push({ q: fcQuestion.value, a: fcAnswer.value });
+            localStorage.setItem('studyflow-flashcards', JSON.stringify(flashcards));
+            fcQuestion.value = '';
+            fcAnswer.value = '';
+            currentIndex = flashcards.length - 1; // Langsung ke kartu baru
+            updateFlashcardView();
+        }
+    });
+
+    document.getElementById('next-fc').addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (currentIndex < flashcards.length - 1) {
+            currentIndex++;
+            updateFlashcardView();
+        }
+    });
+
+    document.getElementById('prev-fc').addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateFlashcardView();
+        }
+    });
+
+    document.getElementById('delete-fc').addEventListener('click', (e) => {
+        e.stopPropagation();
+        flashcards.splice(currentIndex, 1);
+        localStorage.setItem('studyflow-flashcards', JSON.stringify(flashcards));
+        if (currentIndex > 0) currentIndex--;
+        updateFlashcardView();
+    });
+
+    updateFlashcardView();
+</script>
+    
 </body>
 </html>
