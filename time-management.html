@@ -904,29 +904,29 @@ body {
             </div>
             <div class="content-card">
     <h2 class="card-title-main">Study Kanban Board</h2>
-    <p>Kelola alur pengerjaan tugas akademikmu agar teratur dari proses perencanaan hingga selesai.</p>
+    <p>Manage your academic workflow in an organized way, from planning to completion.</p>
 
     <div style="margin: 1.5rem 0; display: flex; gap: 10px; flex-wrap: wrap;">
-        <input type="text" id="kanban-input" placeholder="Nama tugas atau materi kuliah..." style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; min-width: 200px;">
+        <input type="text" id="kanban-input" placeholder="Assignment or course material name..." style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; min-width: 200px;">
         <select id="kanban-priority" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-            <option value="high">🔴 Prioritas Tinggi</option>
-            <option value="medium">🟡 Prioritas Sedang</option>
-            <option value="low">🟢 Prioritas Rendah</option>
+            <option value="high">🔴 High Priority</option>
+            <option value="medium">🟡 Medium Priority</option>
+            <option value="low">🟢 Low Priority</option>
         </select>
         <button id="add-kanban-btn" style="background: var(--primary); color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">Tambah Tugas</button>
     </div>
 
     <div class="kanban-board">
         <div class="kanban-column">
-            <h4>📋 Rencana (To Do)</h4>
+            <h4>📋 To Do </h4>
             <div id="todo-tasks" class="kanban-tasks"></div>
         </div>
         <div class="kanban-column">
-            <h4>⚡ Sedang Dikerjakan</h4>
+            <h4>⚡ On-Progress</h4>
             <div id="progress-tasks" class="kanban-tasks"></div>
         </div>
         <div class="kanban-column">
-            <h4>✅ Selesai (Done)</h4>
+            <h4>✅ Done </h4>
             <div id="done-tasks" class="kanban-tasks"></div>
         </div>
     </div>
