@@ -807,24 +807,24 @@ body {
 
             <div class="content-card">
     <h2 class="card-title-main">Personal Eisenhower Matrix</h2>
-    <p>Petakan tugas kuliah atau sekolahmu langsung ke dalam sistem prioritas di bawah ini:</p>
+    <p>Map your college or school assignments directly into the priority system below:</p>
     
     <div style="margin: 1.5rem 0; display: flex; gap: 10px; flex-wrap: wrap;">
         <input type="text" id="task-input" placeholder="Tulis nama tugas..." style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; min-width: 200px;">
         <select id="priority-select" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-            <option value="q1">Penting & Mendesak (Do First)</option>
-            <option value="q2">Penting & Santai (Schedule)</option>
-            <option value="q3">Kurang Penting & Mendesak (Delegate)</option>
-            <option value="q4">Kurang Penting & Santai (Eliminate)</option>
+            <option value="q1">Important-Urgent (Do First)</option>
+            <option value="q2">Important-Not Urgent (Schedule)</option>
+            <option value="q3">Not Important-Urgent (Delegate)</option>
+            <option value="q4">Not Important-Not Urgent (Eliminate)</option>
         </select>
         <button id="add-task-btn" style="background: var(--primary); color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">Tambah</button>
     </div>
 
     <div class="matrix-grid">
-        <div class="quadrant q1"><h4>🔥 DO FIRST (Penting-Mendesak)</h4><div id="q1-list"></div></div>
-        <div class="quadrant q2"><h4>📅 SCHEDULE (Penting-Gak Mendesak)</h4><div id="q2-list"></div></div>
-        <div class="quadrant q3"><h4>🤝 DELEGATE (Gak Penting-Mendesak)</h4><div id="q3-list"></div></div>
-        <div class="quadrant q4"><h4>🗑️ ELIMINATE (Gak Penting-Gak Mendesak)</h4><div id="q4-list"></div></div>
+        <div class="quadrant q1"><h4>🔥 DO FIRST (Important-Urgent)</h4><div id="q1-list"></div></div>
+        <div class="quadrant q2"><h4>📅 SCHEDULE (Important-Not Urgent)</h4><div id="q2-list"></div></div>
+        <div class="quadrant q3"><h4>🤝 DELEGATE (Not Important-Urgent)</h4><div id="q3-list"></div></div>
+        <div class="quadrant q4"><h4>🗑️ ELIMINATE (Not Important-Not Urgent)</h4><div id="q4-list"></div></div>
     </div>
 </div>
             
