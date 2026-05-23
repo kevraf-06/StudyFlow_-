@@ -9,6 +9,71 @@
    GLOBAL STYLES & RESET
    =========================== */
 
+       /* KANBAN BOARD SYSTEM */
+.kanban-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.kanban-column {
+    background-color: var(--bg-light);
+    border-radius: 10px;
+    padding: 1.2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border-top: 4px solid var(--primary);
+    min-height: 300px;
+}
+
+.kanban-column:nth-child(2) { border-top-color: #f59e0b; } /* In Progress (Kuning) */
+.kanban-column:nth-child(3) { border-top-color: #10b981; } /* Done (Hijau) */
+
+.kanban-column h4 {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.kanban-tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.kanban-item {
+    background-color: var(--card-bg);
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-left: 3px solid #6b7280;
+}
+
+.kanban-item.high { border-left-color: #ef4444; }
+.kanban-item.medium { border-left-color: #f59e0b; }
+.kanban-item.low { border-left-color: #10b981; }
+
+.kanban-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+.kanban-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+.kanban-btn:hover { background-color: rgba(0,0,0,0.05); }
+.dark-theme .kanban-btn:hover { background-color: rgba(255,255,255,0.1); }
+       
  :root {
     --primary: #4F46E5;
     --primary-dark: #3730a3;
@@ -837,6 +902,35 @@ body {
                     </ul>
                 </div>
             </div>
+            <div class="content-card">
+    <h2 class="card-title-main">Study Kanban Board</h2>
+    <p>Kelola alur pengerjaan tugas akademikmu agar teratur dari proses perencanaan hingga selesai.</p>
+
+    <div style="margin: 1.5rem 0; display: flex; gap: 10px; flex-wrap: wrap;">
+        <input type="text" id="kanban-input" placeholder="Nama tugas atau materi kuliah..." style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; min-width: 200px;">
+        <select id="kanban-priority" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+            <option value="high">🔴 Prioritas Tinggi</option>
+            <option value="medium">🟡 Prioritas Sedang</option>
+            <option value="low">🟢 Prioritas Rendah</option>
+        </select>
+        <button id="add-kanban-btn" style="background: var(--primary); color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">Tambah Tugas</button>
+    </div>
+
+    <div class="kanban-board">
+        <div class="kanban-column">
+            <h4>📋 Rencana (To Do)</h4>
+            <div id="todo-tasks" class="kanban-tasks"></div>
+        </div>
+        <div class="kanban-column">
+            <h4>⚡ Sedang Dikerjakan</h4>
+            <div id="progress-tasks" class="kanban-tasks"></div>
+        </div>
+        <div class="kanban-column">
+            <h4>✅ Selesai (Done)</h4>
+            <div id="done-tasks" class="kanban-tasks"></div>
+        </div>
+    </div>
+</div>
         </section>
     </main>
 
@@ -846,5 +940,72 @@ body {
             <p>&copy; 2026 StudyFlow. All rights reserved.</p>
         </div>
     </footer>
+    
+    <script>
+    const kanbanInput = document.getElementById('kanban-input');
+    const kanbanPriority = document.getElementById('kanban-priority');
+    const addKanbanBtn = document.getElementById('add-kanban-btn');
+
+    let kanbanTasks = JSON.parse(localStorage.getItem('kanban-tasks-data')) || [];
+
+    function renderKanban() {
+        document.getElementById('todo-tasks').innerHTML = '';
+        document.getElementById('progress-tasks').innerHTML = '';
+        document.getElementById('done-tasks').innerHTML = '';
+
+        kanbanTasks.forEach((task, index) => {
+            const taskItem = document.createElement('div');
+            taskItem.className = `kanban-item ${task.priority}`;
+            
+            // Logika tombol navigasi status tugas
+            let actionButtons = '';
+            if (task.status === 'todo') {
+                actionButtons = `<button class="kanban-btn" onclick="moveKanban(${index}, 'progress')">➡️</button>`;
+            } else if (task.status === 'progress') {
+                actionButtons = `
+                    <button class="kanban-btn" onclick="moveKanban(${index}, 'todo')">⬅️</button>
+                    <button class="kanban-btn" onclick="moveKanban(${index}, 'done')">➡️</button>`;
+            } else if (task.status === 'done') {
+                actionButtons = `
+                    <button class="kanban-btn" onclick="moveKanban(${index}, 'progress')">⬅️</button>
+                    <button class="kanban-btn" onclick="deleteKanban(${index})" style="color:#ef4444;">🗑️</button>`;
+            }
+
+            taskItem.innerHTML = `
+                <span style="font-weight:500;">${task.text}</span>
+                <div class="kanban-actions">${actionButtons}</div>
+            `;
+
+            document.getElementById(`${task.status}-tasks`).appendChild(taskItem);
+        });
+    }
+
+    addKanbanBtn.addEventListener('click', () => {
+        if (kanbanInput.value.trim() !== '') {
+            kanbanTasks.push({
+                text: kanbanInput.value,
+                priority: kanbanPriority.value,
+                status: 'todo'
+            });
+            localStorage.setItem('kanban-tasks-data', JSON.stringify(kanbanTasks));
+            kanbanInput.value = '';
+            renderKanban();
+        }
+    });
+
+    window.moveKanban = function(index, newStatus) {
+        kanbanTasks[index].status = newStatus;
+        localStorage.setItem('kanban-tasks-data', JSON.stringify(kanbanTasks));
+        renderKanban();
+    }
+
+    window.deleteKanban = function(index) {
+        kanbanTasks.splice(index, 1);
+        localStorage.setItem('kanban-tasks-data', JSON.stringify(kanbanTasks));
+        renderKanban();
+    }
+
+    renderKanban();
+</script>
 </body>
 </html>
