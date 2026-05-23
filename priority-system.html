@@ -901,4 +901,45 @@ body {
         </div>
     </footer>
 </body>
+    <script>
+    const taskInput = document.getElementById('task-input');
+    const prioritySelect = document.getElementById('priority-select');
+    const addTaskBtn = document.getElementById('add-task-btn');
+
+    // Load data lama dari browser
+    let savedTasks = JSON.parse(localStorage.getItem('eisenhower-tasks')) || [];
+
+    function renderTasks() {
+        // Bersihkan semua list kuadran terlebih dahulu
+        document.getElementById('q1-list').innerHTML = '';
+        document.getElementById('q2-list').innerHTML = '';
+        document.getElementById('q3-list').innerHTML = '';
+        document.getElementById('q4-list').innerHTML = '';
+
+        savedTasks.forEach((task, index) => {
+            const taskDiv = document.createElement('div');
+            taskDiv.className = 'todo-item';
+            taskDiv.innerHTML = `<span>${task.text}</span> <button class="delete-btn" onclick="deleteTask(${index})">✕</button>`;
+            document.getElementById(`${task.quadrant}-list`).appendChild(taskDiv);
+        });
+    }
+
+    addTaskBtn.addEventListener('click', () => {
+        if (taskInput.value.trim() !== '') {
+            savedTasks.push({ text: taskInput.value, quadrant: prioritySelect.value });
+            localStorage.setItem('eisenhower-tasks', JSON.stringify(savedTasks));
+            taskInput.value = '';
+            renderTasks();
+        }
+    });
+
+    function deleteTask(index) {
+        savedTasks.splice(index, 1);
+        localStorage.setItem('eisenhower-tasks', JSON.stringify(savedTasks));
+        renderTasks();
+    }
+
+    // Jalankan render saat halaman pertama kali dibuka
+    renderTasks();
+</script>
 </html>
