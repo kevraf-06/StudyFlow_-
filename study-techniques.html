@@ -862,11 +862,11 @@ body {
                 </div>
                 <div class="content-card">
     <h2 class="card-title-main">Active Recall Flashcards</h2>
-    <p>Uji daya ingatmu! Masukkan daftar pertanyaan kunci di bawah ini, lalu klik kartu untuk melihat jawabannya.</p>
+    <p>Test your memory! Enter the list of key questions below, then click the cards to see the answers.</p>
 
     <div style="margin: 1.5rem 0; display: flex; flex-direction: column; gap: 10px;">
-        <input type="text" id="fc-question" placeholder="Masukkan Pertanyaan... (Contoh: Apa rumus Hukum Ohm?)" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-        <input type="text" id="fc-answer" placeholder="Masukkan Jawaban Kunci... (Contoh: V = I x R)" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+        <input type="text" id="fc-question" placeholder="“Enter a Question... (Example: What is Ohm’s Law formula?)" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+        <input type="text" id="fc-answer" placeholder="Enter the Key Answer... (Example: V = I × R)" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
         <button id="add-fc-btn" style="background: var(--primary); color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">Simpan ke Kumpulan Kartu</button>
     </div>
 
@@ -874,12 +874,12 @@ body {
         <div class="flashcard-container" id="fc-box">
             <div class="flashcard" id="fc-hardware">
                 <div class="card-face card-front">
-                    <span style="font-size:0.85rem; text-transform:uppercase; opacity:0.8; margin-bottom:1rem;">Pertanyaan</span>
-                    <h3 id="display-question" style="font-size:1.4rem;">Pertanyaan disini?</h3>
+                    <span style="font-size:0.85rem; text-transform:uppercase; opacity:0.8; margin-bottom:1rem;">Question</span>
+                    <h3 id="display-question" style="font-size:1.4rem;">Question Here</h3>
                 </div>
                 <div class="card-face card-back">
-                    <span style="font-size:0.85rem; text-transform:uppercase; opacity:0.8; margin-bottom:1rem; color:#10b981;">Jawaban Benar</span>
-                    <h3 id="display-answer" style="font-size:1.4rem;">Jawaban disini.</h3>
+                    <span style="font-size:0.85rem; text-transform:uppercase; opacity:0.8; margin-bottom:1rem; color:#10b981;">Answer</span>
+                    <h3 id="display-answer" style="font-size:1.4rem;">Answer Here</h3>
                 </div>
             </div>
         </div>
@@ -888,11 +888,11 @@ body {
             <button id="prev-fc" style="padding:8px 15px; border-radius:5px; cursor:pointer; border:1px solid #ccc; background:var(--card-bg);">⬅️ Sebelum</button>
             <span id="fc-counter" style="margin: 0 15px; font-weight:600;">1 / 1</span>
             <button id="next-fc" style="padding:8px 15px; border-radius:5px; cursor:pointer; border:1px solid #ccc; background:var(--card-bg);">Berikut ➡️</button>
-            <button id="delete-fc" style="margin-left: 10px; color:#ef4444; background:none; border:none; cursor:pointer;">Hapus Kartu Ini</button>
+            <button id="delete-fc" style="margin-left: 10px; color:#ef4444; background:none; border:none; cursor:pointer;">Delete This Card</button>
         </div>
     </div>
     
-    <p id="no-fc-msg" style="text-align:center; color:#888; font-style:italic; margin-top:2rem;">Belum ada kartu hafalan. Tambahkan pertanyaan di atas untuk memulai kuis!</p>
+    <p id="no-fc-msg" style="text-align:center; color:#888; font-style:italic; margin-top:2rem;">No flashcards yet. Add a question above to start the quiz!</p>
 </div>
             </div>
 
