@@ -8,6 +8,40 @@
    GLOBAL STYLES & RESET
    =========================== */
 
+    .matrix-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+.quadrant {
+    padding: 1.5rem;
+    border-radius: 8px;
+    min-height: 200px;
+    background: var(--card-bg);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.q1 { border-top: 5px solid #ef4444; } /* Penting & Mendesak (Merah) */
+.q2 { border-top: 5px solid #f59e0b; } /* Penting tapi Tidak Mendesak (Orange) */
+.q3 { border-top: 5px solid #3b82f6; } /* Tidak Penting tapi Mendesak (Biru) */
+.q4 { border-top: 5px solid #10b981; } /* Tidak Penting & Tidak Mendesak (Hijau) */
+
+.todo-item {
+    display: flex;
+    justify-content: space-between;
+    background: #f3f4f6;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-top: 8px;
+    color: #333;
+}
+.dark-theme .todo-item { background: #334155; color: #fff; }
+.delete-btn { background: none; border: none; color: #ef4444; cursor: pointer; font-weight: bold; }
+
+@media (max-width: 768px) {
+    .matrix-grid { grid-template-columns: 1fr; }
+}
+        
  :root {
     --primary: #4F46E5;
     --primary-dark: #3730a3;
@@ -771,6 +805,29 @@ body {
                 </div>
             </div>
 
+            <div class="content-card">
+    <h2 class="card-title-main">Personal Eisenhower Matrix</h2>
+    <p>Petakan tugas kuliah atau sekolahmu langsung ke dalam sistem prioritas di bawah ini:</p>
+    
+    <div style="margin: 1.5rem 0; display: flex; gap: 10px; flex-wrap: wrap;">
+        <input type="text" id="task-input" placeholder="Tulis nama tugas..." style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; min-width: 200px;">
+        <select id="priority-select" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+            <option value="q1">Penting & Mendesak (Do First)</option>
+            <option value="q2">Penting & Santai (Schedule)</option>
+            <option value="q3">Kurang Penting & Mendesak (Delegate)</option>
+            <option value="q4">Kurang Penting & Santai (Eliminate)</option>
+        </select>
+        <button id="add-task-btn" style="background: var(--primary); color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">Tambah</button>
+    </div>
+
+    <div class="matrix-grid">
+        <div class="quadrant q1"><h4>🔥 DO FIRST (Penting-Mendesak)</h4><div id="q1-list"></div></div>
+        <div class="quadrant q2"><h4>📅 SCHEDULE (Penting-Gak Mendesak)</h4><div id="q2-list"></div></div>
+        <div class="quadrant q3"><h4>🤝 DELEGATE (Gak Penting-Mendesak)</h4><div id="q3-list"></div></div>
+        <div class="quadrant q4"><h4>🗑️ ELIMINATE (Gak Penting-Gak Mendesak)</h4><div id="q4-list"></div></div>
+    </div>
+</div>
+            
             <!-- Method 2 -->
             <div class="content-card">
                 <h2 class="card-title-main">ABC Priority Method</h2>
