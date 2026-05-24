@@ -877,17 +877,16 @@ body {
     <div style="margin-bottom: 1.5rem;">
         <h3 style="margin: 0;">🧠 Digital Study Journal & Brain Dump</h3>
         <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #666;">
-            Tuliskan apa saja yang mengganggu pikiranmu sebelum belajar (Brain Dump), atau catat evaluasi belajarmu hari ini di sini.
-        </p>
+            Write down anything cluttering your mind before studying (Brain Dump), or log your study evaluation for today here.
     </div>
 
     <div class="journal-form">
-        <input type="text" id="journal-title" placeholder="Judul Catatan (Contoh: Evaluasi Belajar Sejarah / Pikiran Cemas Sebelum Ujian)" class="journal-input-title">
-        <textarea id="journal-content" placeholder="Keluarkan semua isi pikiranmu di sini tanpa ragu..." class="journal-textarea"></textarea>
-        <button id="save-journal-btn" class="journal-save-btn">Simpan Catatan Jurnal</button>
+        <input type="text" id="journal-title" placeholder="Note Title (e.g., History Study Evaluation / Anxious Thoughts Before Exam)" class="journal-input-title">
+        <textarea id="journal-content" placeholder="Clear your mind here without hesitation..." class="journal-textarea"></textarea>
+        <button id="save-journal-btn" class="journal-save-btn">Save Journal Note</button>
     </div>
 
-    <h4 style="margin: 2rem 0 0.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 5px;">📜 Riwayat Catatan Jurnal</h4>
+    <h4 style="margin: 2rem 0 0.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 5px;">📜 Past Journal Logs</h4>
     <div id="journal-history-container" class="journal-history-grid"></div>
 </div>
             </div>
@@ -963,13 +962,13 @@ body {
             
             renderJournals();
         } else {
-            alert('Silakan tulis isi jurnal terlebih dahulu sebelum menyimpan!');
+            alert('Please write your journal content before saving!');
         }
     });
 
     // Aksi Menghapus Jurnal
     window.deleteJournal = function(index) {
-        if (confirm('Apakah Anda yakin ingin menghapus catatan jurnal ini secara permanen?')) {
+        if (confirm('Are you sure you want to permanently delete this journal entry?')) {
             savedJournals.splice(index, 1);
             localStorage.setItem('studyflow-journals', JSON.stringify(savedJournals));
             renderJournals();
