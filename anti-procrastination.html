@@ -6,6 +6,115 @@
     <title>Anti-Procrastination - StudyFlow</title>
     <style>
 
+        /* ==========================================================================
+   DIGITAL STUDY JOURNAL & BRAIN DUMP SYSTEM
+   ========================================================================== */
+.journal-container {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.journal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 2rem;
+}
+
+.journal-input-title {
+    padding: 12px;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 8px;
+    font-size: 1rem;
+    background: var(--bg-light);
+    color: var(--text-color);
+}
+
+.journal-textarea {
+    padding: 12px;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    min-height: 120px;
+    resize: vertical;
+    background: var(--bg-light);
+    color: var(--text-color);
+}
+
+.journal-save-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background 0.2s;
+}
+.journal-save-btn:hover { background: var(--primary-dark); }
+
+/* Grid untuk List Catatan yang Sudah Tersimpan */
+.journal-history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.journal-card {
+    background: var(--bg-light);
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+.journal-card-date {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    font-weight: 600;
+}
+
+.journal-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.journal-card-text {
+    font-size: 0.95rem;
+    line-height: 1.4;
+    white-space: pre-wrap; /* Menjaga enter/spasi teks tetap rapi */
+}
+
+.delete-journal-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* Penyesuaian Responsif di Layar HP */
+@media (max-width: 600px) {
+    .journal-history-grid {
+        grid-template-columns: 1fr; /* Menjadi 1 kolom penuh ke bawah di HP */
+    }
+}
+        
 /* ===========================
    GLOBAL STYLES & RESET
    =========================== */
@@ -764,6 +873,23 @@ body {
                         <li>For anxiety-based procrastination, start with easier parts</li>
                     </ul>
                 </div>
+                <div class="journal-container">
+    <div style="margin-bottom: 1.5rem;">
+        <h3 style="margin: 0;">🧠 Digital Study Journal & Brain Dump</h3>
+        <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #666;">
+            Tuliskan apa saja yang mengganggu pikiranmu sebelum belajar (Brain Dump), atau catat evaluasi belajarmu hari ini di sini.
+        </p>
+    </div>
+
+    <div class="journal-form">
+        <input type="text" id="journal-title" placeholder="Judul Catatan (Contoh: Evaluasi Belajar Sejarah / Pikiran Cemas Sebelum Ujian)" class="journal-input-title">
+        <textarea id="journal-content" placeholder="Keluarkan semua isi pikiranmu di sini tanpa ragu..." class="journal-textarea"></textarea>
+        <button id="save-journal-btn" class="journal-save-btn">Simpan Catatan Jurnal</button>
+    </div>
+
+    <h4 style="margin: 2rem 0 0.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 5px;">📜 Riwayat Catatan Jurnal</h4>
+    <div id="journal-history-container" class="journal-history-grid"></div>
+</div>
             </div>
         </section>
     </main>
@@ -772,6 +898,88 @@ body {
     <footer class="footer">
         <div class="container">
             <p>&copy; 2026 StudyFlow. All rights reserved.</p>
+
+            <script>
+    const journalTitle = document.getElementById('journal-title');
+    const journalContent = document.getElementById('journal-content');
+    const saveJournalBtn = document.getElementById('save-journal-btn');
+    const journalHistoryContainer = document.getElementById('journal-history-container');
+
+    // Mengambil data jurnal dari localStorage
+    let savedJournals = JSON.parse(localStorage.getItem('studyflow-journals')) || [];
+
+    function renderJournals() {
+        journalHistoryContainer.innerHTML = '';
+
+        if (savedJournals.length === 0) {
+            journalHistoryContainer.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#888; font-style:italic; margin: 1rem 0;">Belum ada catatan jurnal. Mulai tulis jurnal pertamamu untuk menjernihkan pikiran!</p>`;
+            return;
+        }
+
+        // Render dari yang paling baru di atas
+        savedJournals.slice().reverse().forEach((journal, reversedIndex) => {
+            // Karena di-reverse, kita hitung indeks asli array untuk fungsi hapus
+            const originalIndex = savedJournals.length - 1 - reversedIndex;
+
+            const journalCard = document.createElement('div');
+            journalCard.className = 'journal-card';
+
+            journalCard.innerHTML = `
+                <div class="journal-card-date">📅 ${journal.date}</div>
+                <h5 class="journal-card-title">${journal.title || 'Tanpa Judul'}</h5>
+                <p class="journal-card-text">${journal.content}</p>
+                <button class="delete-journal-btn" onclick="deleteJournal(${originalIndex})">✕</button>
+            `;
+
+            journalHistoryContainer.appendChild(journalCard);
+        });
+    }
+
+    // Aksi Menyimpan Jurnal Baru
+    saveJournalBtn.addEventListener('click', () => {
+        const contentText = journalContent.value.trim();
+        const titleText = journalTitle.value.trim();
+
+        if (contentText !== '') {
+            // Mengambil tanggal hari ini secara otomatis
+            const today = new Date();
+            const formattedDate = today.toLocaleDateString('id-ID', { 
+                day: 'numeric', 
+                month: 'short', 
+                year: 'numeric' 
+            });
+
+            savedJournals.push({
+                title: titleText,
+                content: contentText,
+                date: formattedDate
+            });
+
+            localStorage.setItem('studyflow-journals', JSON.stringify(savedJournals));
+            
+            // Reset Form Input
+            journalTitle.value = '';
+            journalContent.value = '';
+            
+            renderJournals();
+        } else {
+            alert('Silakan tulis isi jurnal terlebih dahulu sebelum menyimpan!');
+        }
+    });
+
+    // Aksi Menghapus Jurnal
+    window.deleteJournal = function(index) {
+        if (confirm('Apakah Anda yakin ingin menghapus catatan jurnal ini secara permanen?')) {
+            savedJournals.splice(index, 1);
+            localStorage.setItem('studyflow-journals', JSON.stringify(savedJournals));
+            renderJournals();
+        }
+    };
+
+    // Render riwayat pertama kali halaman dibuka
+    renderJournals();
+</script>
+            
         </div>
     </footer>
 </body>
