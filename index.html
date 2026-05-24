@@ -9,7 +9,9 @@
    GLOBAL STYLES & RESET
    =========================== */
 
-/* HABIT TRACKER SYSTEM */
+/* ==========================================================================
+   HABIT TRACKER SYSTEM (RESPONSIVE VERSION)
+   ========================================================================== */
 .habit-container {
     margin-top: 2rem;
     padding: 1.5rem;
@@ -24,7 +26,7 @@
     align-items: center;
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 15px;
 }
 
 .habit-grid {
@@ -33,40 +35,49 @@
     gap: 1rem;
 }
 
-.habit-row {
+/* Layout Default untuk Desktop */
+.day-label-row, .habit-row {
     display: grid;
-    grid-template-columns: 2fr repeat(7, 1fr) 0.5fr;
+    grid-template-columns: 2.5fr repeat(7, 1fr) 0.5fr;
     align-items: center;
-    gap: 5px;
-    padding: 10px;
+    gap: 10px;
+    padding: 12px 15px;
+}
+
+.day-label-row {
+    font-weight: 600;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    border-bottom: 2px solid rgba(0,0,0,0.1);
+    text-align: center;
+}
+.day-label-row div:first-child { text-align: left; }
+
+.habit-row {
     background: var(--bg-light);
     border-radius: 8px;
     text-align: center;
+    transition: all 0.2s ease;
 }
 
 .habit-name {
     text-align: left;
     font-weight: 500;
+    word-break: break-word;
 }
 
-.day-label-row {
-    display: grid;
-    grid-template-columns: 2fr repeat(7, 1fr) 0.5fr;
-    gap: 5px;
-    text-align: center;
-    font-weight: 600;
-    font-size: 0.85rem;
-    opacity: 0.8;
-    margin-bottom: 0.5rem;
-    padding: 0 10px;
+/* Styling Checkbox yang Besar & Mudah Ditekan di HP */
+.habit-checkbox-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .habit-checkbox {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     cursor: pointer;
     accent-color: var(--primary);
-    margin: auto;
 }
 
 .delete-habit-btn {
@@ -75,24 +86,83 @@
     color: #ef4444;
     cursor: pointer;
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    transition: transform 0.2s;
 }
+.delete-habit-btn:hover { transform: scale(1.2); }
 
-@media (max-width: 600px) {
-    .day-label-row, .habit-row {
-        grid-template-columns: 1fr;
-        text-align: left;
-        gap: 8px;
+/* ==========================================================================
+   STRATEGI RESPONSIVITAS LAYAR HP (Max-width: 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .habit-header {
+        flex-direction: column;
+        align-items: stretch;
     }
+    
+    .habit-header div { width: 100%; }
+    
+    /* Input & Tombol memenuhi lebar layar HP */
+    .habit-header style, #habit-input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    /* Sembunyikan baris label hari desktop karena tidak akan muat */
+    .day-label-row {
+        display: none;
+    }
+
+    /* Ubah baris tabel menjadi bentuk KARTU vertikal */
+    .habit-row {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+        position: relative;
+        gap: 12px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
     .habit-name {
-        border-bottom: 1px solid #ccc;
-        padding-bottom: 5px;
-        margin-bottom: 5px;
+        font-size: 1.1rem;
+        width: 85%; /* Sisakan ruang untuk tombol hapus di kanan */
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        padding-bottom: 8px;
     }
+
+    /* Kontainer pembungkus hari-hari agar berjejer rapi ke samping */
     .days-container-mobile {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 8px;
+        width: 100%;
+    }
+
+    /* Ubah pembungkus checkbox menjadi tombol mini berlabel hari di HP */
+    .habit-checkbox-wrapper {
+        background: var(--card-bg);
+        padding: 6px 10px;
+        border-radius: 6px;
+        border: 1px solid rgba(0,0,0,0.1);
+        display: flex;
+        gap: 6px;
+        align-items: center;
+    }
+
+    /* Munculkan Teks Label Hari Mini (Sen, Sel, dsb) di samping checkbox khusus layar HP */
+    .habit-checkbox-wrapper::before {
+        content: attr(data-day);
+        font-size: 0.8rem;
+        font-weight: 600;
+        opacity: 0.7;
+    }
+
+    /* Posisikan tombol hapus di pojok kanan atas kartu */
+    .delete-habit-btn {
+        position: absolute;
+        top: 12px;
+        right: 15px;
     }
 }
         
@@ -608,30 +678,39 @@ body {
     // Load data lama dari localStorage atau buat array kosong jika baru pertama kali
     let habits = JSON.parse(localStorage.getItem('studyflow-habits')) || [];
 
-    function renderHabits() {
-        habitListContainer.innerHTML = '';
+  function renderHabits() {
+    habitListContainer.innerHTML = '';
 
-        if (habits.length === 0) {
-            habitListContainer.innerHTML = `<p style="text-align:center; color:#888; font-style:italic; margin: 1rem 0;">Belum ada kebiasaan yang dilacak. Tambahkan kebiasaan belajarmu di atas!</p>`;
-            return;
+    if (habits.length === 0) {
+        habitListContainer.innerHTML = `<p style="text-align:center; color:#888; font-style:italic; margin: 1rem 0;">Belum ada kebiasaan yang dilacak. Tambahkan kebiasaan belajarmu di atas!</p>`;
+        return;
+    }
+
+    // Array nama hari untuk label di HP
+    const daysName = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+
+    habits.forEach((habit, habitIndex) => {
+        const habitRow = document.createElement('div');
+        habitRow.className = 'habit-row';
+
+        // 1. Bagian Nama Kebiasaan
+        let rowHTML = `<div class="habit-name">${habit.name}</div>`;
+
+        // Pembungkus khusus agar di HP bisa di-flex menyamping dengan rapi
+        rowHTML += `<div class="days-container-mobile">`;
+
+        // 2. Membuat 7 Checkbox Hari
+        for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
+            const isChecked = habit.days[dayIndex] ? 'checked' : '';
+            
+            // Perhatikan atribut data-day="${daysName[dayIndex]}", ini kunci untuk CSS responsif HP kita
+            rowHTML += `
+                <div class="habit-checkbox-wrapper" data-day="${daysName[dayIndex]}">
+                    <input type="checkbox" class="habit-checkbox" ${isChecked} 
+                           onclick="toggleHabitDay(${habitIndex}, ${dayIndex})">
+                </div>`;
         }
-
-        habits.forEach((habit, habitIndex) => {
-            const habitRow = document.createElement('div');
-            habitRow.className = 'habit-row';
-
-            // Nama Habit
-            let rowHTML = `<div class="habit-name">${habit.name}</div>`;
-
-            // Membuat 7 Checkbox untuk tiap hari (0 = Senin, 6 = Minggu)
-            for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
-                const isChecked = habit.days[dayIndex] ? 'checked' : '';
-                rowHTML += `
-                    <div>
-                        <input type="checkbox" class="habit-checkbox" ${isChecked} 
-                               onclick="toggleHabitDay(${habitIndex}, ${dayIndex})">
-                    </div>`;
-            }
+        
 
             // Tombol Hapus Habit
             rowHTML += `<div><button class="delete-habit-btn" onclick="deleteHabit(${habitIndex})">✕</button></div>`;
