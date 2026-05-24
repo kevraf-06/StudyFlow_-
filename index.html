@@ -9,6 +9,93 @@
    GLOBAL STYLES & RESET
    =========================== */
 
+/* HABIT TRACKER SYSTEM */
+.habit-container {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.habit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.habit-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.habit-row {
+    display: grid;
+    grid-template-columns: 2fr repeat(7, 1fr) 0.5fr;
+    align-items: center;
+    gap: 5px;
+    padding: 10px;
+    background: var(--bg-light);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.habit-name {
+    text-align: left;
+    font-weight: 500;
+}
+
+.day-label-row {
+    display: grid;
+    grid-template-columns: 2fr repeat(7, 1fr) 0.5fr;
+    gap: 5px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-bottom: 0.5rem;
+    padding: 0 10px;
+}
+
+.habit-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--primary);
+    margin: auto;
+}
+
+.delete-habit-btn {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 600px) {
+    .day-label-row, .habit-row {
+        grid-template-columns: 1fr;
+        text-align: left;
+        gap: 8px;
+    }
+    .habit-name {
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+    }
+    .days-container-mobile {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+}
+        
 html{
     scroll-behavior: smooth !important;
     scroll-padding-top: 90px;
@@ -479,12 +566,117 @@ body {
             </div>
         </section>
     </main>
+
+    <div class="habit-container">
+    <div class="habit-header">
+        <div>
+            <h3 style="margin: 0;">🎯 Daily Study Habit Tracker</h3>
+            <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #666;">Bangun konsistensi belajar mingguanmu di sini.</p>
+        </div>
+        <div style="display: flex; gap: 8px;">
+            <input type="text" id="habit-input" placeholder="Contoh: Baca buku 15 menit..." style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.9rem;">
+            <button id="add-habit-btn" style="background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600;">+ Tambah</button>
+        </div>
+    </div>
+
+    <div class="day-label-row">
+        <div style="text-align: left;">Nama Kebiasaan</div>
+        <div>Sen</div>
+        <div>Sel</div>
+        <div>Rab</div>
+        <div>Kam</div>
+        <div>Jum</div>
+        <div>Sab</div>
+        <div>Min</div>
+        <div></div>
+    </div>
+
+    <div id="habit-list-container" class="habit-grid"></div>
+</div>
     
     <footer class="footer">
         <div class="container">
             <p>&copy; 2026 StudyFlow. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+    const habitInput = document.getElementById('habit-input');
+    const addHabitBtn = document.getElementById('add-habit-btn');
+    const habitListContainer = document.getElementById('habit-list-container');
+
+    // Load data lama dari localStorage atau buat array kosong jika baru pertama kali
+    let habits = JSON.parse(localStorage.getItem('studyflow-habits')) || [];
+
+    function renderHabits() {
+        habitListContainer.innerHTML = '';
+
+        if (habits.length === 0) {
+            habitListContainer.innerHTML = `<p style="text-align:center; color:#888; font-style:italic; margin: 1rem 0;">Belum ada kebiasaan yang dilacak. Tambahkan kebiasaan belajarmu di atas!</p>`;
+            return;
+        }
+
+        habits.forEach((habit, habitIndex) => {
+            const habitRow = document.createElement('div');
+            habitRow.className = 'habit-row';
+
+            // Nama Habit
+            let rowHTML = `<div class="habit-name">${habit.name}</div>`;
+
+            // Membuat 7 Checkbox untuk tiap hari (0 = Senin, 6 = Minggu)
+            for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
+                const isChecked = habit.days[dayIndex] ? 'checked' : '';
+                rowHTML += `
+                    <div>
+                        <input type="checkbox" class="habit-checkbox" ${isChecked} 
+                               onclick="toggleHabitDay(${habitIndex}, ${dayIndex})">
+                    </div>`;
+            }
+
+            // Tombol Hapus Habit
+            rowHTML += `<div><button class="delete-habit-btn" onclick="deleteHabit(${habitIndex})">✕</button></div>`;
+
+            habitRow.innerHTML = rowHTML;
+            habitListContainer.appendChild(habitRow);
+        });
+    }
+
+    // Aksi Menambah Habit Baru
+    addHabitBtn.addEventListener('click', () => {
+        const name = habitInput.value.trim();
+        if (name !== '') {
+            habits.push({
+                name: name,
+                days: [false, false, false, false, false, false, false] // 7 hari default kosong (false)
+            });
+            saveAndRender();
+            habitInput.value = '';
+        }
+    });
+
+    // Aksi Mengubah Status Checkbox Hari
+    window.toggleHabitDay = function(habitIndex, dayIndex) {
+        habits[habitIndex].days[dayIndex] = !habits[habitIndex].days[dayIndex];
+        saveAndRender();
+    };
+
+    // Aksi Menghapus Satu Baris Habit
+    window.deleteHabit = function(habitIndex) {
+        if (confirm('Apakah kamu ingin menghapus pelacakan kebiasaan ini?')) {
+            habits.splice(habitIndex, 1);
+            saveAndRender();
+        }
+    };
+
+    function saveAndRender() {
+        localStorage.setItem('studyflow-habits', JSON.stringify(habits));
+        renderHabits();
+    }
+
+    // Jalankan render pertama kali halaman dibuka
+    renderHabits();
+</script>
+    
 </body>
 </html>
 
